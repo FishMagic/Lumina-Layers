@@ -151,7 +151,7 @@ pip install -r requirements.txt
 
 ### 快速开始
 ```bash
-python LuminaStudio.py
+python main.py
 ```
 这将启动包含所有三个模块的 Web 界面。
 
