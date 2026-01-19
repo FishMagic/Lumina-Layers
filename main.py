@@ -28,7 +28,22 @@ def start_browser():
     webbrowser.open(f"http://127.0.0.1:{PORT}")
 
 if __name__ == "__main__":
-    # Launch Gradio App FIRST (before system tray to avoid conflicts)
+
+    # 1. Start System Tray
+    # On macOS, pystray can cause trace trap errors when running alongside Gradio
+    # Disable system tray on macOS to avoid crashes
+    if sys.platform != "darwin":  # Only enable on non-macOS systems
+        print("🚀 Starting System Tray...")
+        try:
+            tray = LuminaTray(port=PORT)
+            tray.run()
+        except Exception as e:
+            print(f"⚠️ Warning: System tray failed to start: {e}")
+
+    # 2. Start Browser Thread
+    threading.Thread(target=start_browser, daemon=True).start()
+
+    # 3. Launch Gradio App
     print(f"✨ Lumina Studio is running on http://127.0.0.1:{PORT}")
     app = create_app()
 
@@ -48,23 +63,7 @@ if __name__ == "__main__":
     except BaseException as e:
         raise
 
-    # Start System Tray AFTER Gradio is launched
-    # On macOS, pystray can cause trace trap errors when running alongside Gradio
-    # Disable system tray on macOS to avoid crashes
-    if sys.platform != "darwin":  # Only enable on non-macOS systems
-        print("🚀 Starting System Tray...")
-        try:
-            tray = LuminaTray(port=PORT)
-            tray.run()
-        except Exception as e:
-            print(f"⚠️ Warning: System tray failed to start: {e}")
-    else:
-        print("ℹ️ System tray disabled on macOS to avoid compatibility issues")
-
-    # Start Browser Thread
-    threading.Thread(target=start_browser, daemon=True).start()
-
-    # Keep Main Thread Alive
+    # 4. Keep Main Thread Alive
     try:
         while True:
             time.sleep(1)
