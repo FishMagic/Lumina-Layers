@@ -4,7 +4,15 @@ Contains all configuration classes, constants, and internationalization texts
 """
 
 import os
-import tempfile
+
+
+# ╔═══════════════════════════════════════════════════════════════════════════════╗
+# ║                           OUTPUT DIRECTORY                                    ║
+# ╚═══════════════════════════════════════════════════════════════════════════════╝
+
+# 输出目录：项目根目录下的 output 文件夹（不再写入 C 盘临时目录）
+OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
 # ╔═══════════════════════════════════════════════════════════════════════════════╗
@@ -182,7 +190,7 @@ PHYSICAL_GRID_SIZE = 34
 DATA_GRID_SIZE = 32
 DST_SIZE = 1000
 CELL_SIZE = DST_SIZE / PHYSICAL_GRID_SIZE
-LUT_FILE_PATH = os.path.join(tempfile.gettempdir(), "lumina_lut.npy")
+LUT_FILE_PATH = os.path.join(OUTPUT_DIR, "lumina_lut.npy")
 
 # Converter constants
 PREVIEW_SCALE = 2  # 固定预览缩放倍数
