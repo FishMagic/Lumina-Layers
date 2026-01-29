@@ -4,14 +4,13 @@ Calibration board generation module
 """
 
 import os
-import tempfile
 from typing import Optional
 
 import numpy as np
 import trimesh
 from PIL import Image
 
-from config import PrinterConfig, ColorSystem
+from config import PrinterConfig, ColorSystem, OUTPUT_DIR
 from utils import Stats, safe_fix_3mf_names
 
 
@@ -149,7 +148,7 @@ def generate_calibration_board(color_mode: str, block_size_mm: float,
 
     # Export
     mode_tag = color_conf['name']
-    output_path = os.path.join(tempfile.gettempdir(), f"Lumina_Calibration_{mode_tag}.3mf")
+    output_path = os.path.join(OUTPUT_DIR, f"Lumina_Calibration_{mode_tag}.3mf")
     scene.export(output_path)
 
     # Fix object names in 3MF for better slicer compatibility

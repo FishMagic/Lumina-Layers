@@ -5,14 +5,13 @@ Coordinates modules to complete image-to-3D model conversion
 """
 
 import os
-import tempfile
 import numpy as np
 import cv2
 import trimesh
 from PIL import Image, ImageDraw, ImageFont
 import gradio as gr
 
-from config import PrinterConfig, ColorSystem, PREVIEW_SCALE, PREVIEW_MARGIN
+from config import PrinterConfig, ColorSystem, PREVIEW_SCALE, PREVIEW_MARGIN, OUTPUT_DIR
 from utils import Stats, safe_fix_3mf_names
 
 # Import refactored modules
@@ -78,7 +77,7 @@ def _save_debug_preview(debug_data, material_matrix, mask_solid, image_path, mod
     
     # Save debug image
     base_name = os.path.splitext(os.path.basename(image_path))[0]
-    debug_path = os.path.join(tempfile.gettempdir(), f"{base_name}_{mode_name}_Debug.png")
+    debug_path = os.path.join(OUTPUT_DIR, f"{base_name}_{mode_name}_Debug.png")
     
     # Convert to PIL image and save
     debug_pil = Image.fromarray(debug_img, mode='RGB')
@@ -264,7 +263,7 @@ def convert_image_to_3d(image_path, lut_path, target_width_mm, spacer_thick,
     
     # ========== Step 8: Export 3MF ==========
     base_name = os.path.splitext(os.path.basename(image_path))[0]
-    out_path = os.path.join(tempfile.gettempdir(), f"{base_name}_Lumina.3mf")
+    out_path = os.path.join(OUTPUT_DIR, f"{base_name}_Lumina.3mf")
     scene.export(out_path)
     
     # Fix 3MF object names
@@ -297,7 +296,7 @@ def convert_image_to_3d(image_path, lut_path, target_width_mm, spacer_thick,
                 print(f"[CONVERTER] Preview loop failed: {e}")
     
     if preview_mesh:
-        glb_path = os.path.join(tempfile.gettempdir(), f"{base_name}_Preview.glb")
+        glb_path = os.path.join(OUTPUT_DIR, f"{base_name}_Preview.glb")
         preview_mesh.export(glb_path)
     else:
         glb_path = None

@@ -11,6 +11,12 @@ Main Entry Point
 """
 
 import os
+
+# 设置 Gradio 临时目录到项目目录，避免写入 C 盘临时目录
+_PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+_GRADIO_TEMP = os.path.join(_PROJECT_ROOT, "output", ".gradio_cache")
+os.makedirs(_GRADIO_TEMP, exist_ok=True)
+os.environ["GRADIO_TEMP_DIR"] = _GRADIO_TEMP
 import sys
 import time
 import threading

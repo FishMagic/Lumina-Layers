@@ -4,12 +4,12 @@ Usage statistics functionality
 """
 
 import os
-import tempfile
+from config import OUTPUT_DIR
 
 
 class Stats:
     """Usage statistics (local counter)"""
-    _file = os.path.join(tempfile.gettempdir(), "lumina_stats.txt")
+    _file = os.path.join(OUTPUT_DIR, "lumina_stats.txt")
 
     @staticmethod
     def increment(key: str) -> int:
