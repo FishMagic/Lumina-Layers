@@ -92,7 +92,7 @@ def _save_debug_preview(debug_data, material_matrix, mask_solid, image_path, mod
 def convert_image_to_3d(image_path, lut_path, target_width_mm, spacer_thick,
                          structure_mode, auto_bg, bg_tol, color_mode,
                          add_loop, loop_width, loop_length, loop_hole, loop_pos,
-                         modeling_mode="vector", quantize_colors=32,
+                         enable_colors=True, modeling_mode="vector", quantize_colors=32,
                          blur_kernel=0, smooth_sigma=10):
     """
     Main conversion function: Convert image to 3D model
@@ -274,7 +274,7 @@ def convert_image_to_3d(image_path, lut_path, target_width_mm, spacer_thick,
     
     # Fix 3MF object names
     # [FIX] Use the filtered list instead of the full list
-    safe_fix_3mf_names(out_path, valid_slot_names)
+    safe_fix_3mf_names(out_path, valid_slot_names, enable_colors=enable_colors)
     
     print(f"[CONVERTER] 3MF exported: {out_path}")
     
@@ -820,11 +820,11 @@ def on_remove_loop():
 def generate_final_model(image_path, lut_path, target_width_mm, spacer_thick,
                         structure_mode, auto_bg, bg_tol, color_mode,
                         add_loop, loop_width, loop_length, loop_hole, loop_pos,
-                        modeling_mode="vector", quantize_colors=64):
+                        enable_colors=True, modeling_mode="vector", quantize_colors=64):
     """
     Wrapper function for generating final model
     Directly calls main conversion function
-    
+
     Uses smart defaults:
     - blur_kernel=0 (disable median filter, preserve details)
     - smooth_sigma=10 (gentle bilateral filter, preserve edges)
@@ -833,7 +833,7 @@ def generate_final_model(image_path, lut_path, target_width_mm, spacer_thick,
         image_path, lut_path, target_width_mm, spacer_thick,
         structure_mode, auto_bg, bg_tol, color_mode,
         add_loop, loop_width, loop_length, loop_hole, loop_pos,
-        modeling_mode, quantize_colors,
+        enable_colors, modeling_mode, quantize_colors,
         blur_kernel=0,      # Disable median filter - preserve high-frequency details
         smooth_sigma=10     # Gentle bilateral filter - preserve edges
     )

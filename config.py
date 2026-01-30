@@ -121,6 +121,7 @@ class I18N:
         'conv_color_preview': {'zh': '#### 🎨 色彩预览', 'en': '#### 🎨 Color Preview'},
         'conv_download': {'zh': '#### 📁 下载', 'en': '#### 📁 Download'},
         'conv_download_3mf': {'zh': '下载 3MF 文件', 'en': 'Download 3MF'},
+        'conv_enable_colors': {'zh': '启用颜色（BambuStudio 兼容）', 'en': 'Enable Colors (BambuStudio Compatible)'},
         'conv_success': {'zh': '✅ 转换完成！分辨率:', 'en': '✅ Conversion complete! Resolution:'},
         'conv_no_image': {'zh': '❌ 请上传图片', 'en': '❌ Please upload an image'},
         'conv_no_lut': {'zh': '⚠️ 请上传 .npy 校准文件！', 'en': '⚠️ Please upload a .npy calibration file!'},

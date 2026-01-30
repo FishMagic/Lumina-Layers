@@ -428,6 +428,12 @@ def create_converter_tab_content(lang: str) -> dict:
                 value=True,
                 info=I18n.get('conv_auto_bg_info', lang)
             )
+
+            components['checkbox_conv_enable_colors'] = gr.Checkbox(
+                label=I18n.get('conv_enable_colors', lang),
+                value=True,
+                info=I18n.get('conv_enable_colors_info', lang)
+            )
                 
             components['slider_conv_tolerance'] = gr.Slider(
                 0, 150, 40,
@@ -634,6 +640,7 @@ def create_converter_tab_content(lang: str) -> dict:
                 components['slider_conv_loop_length'],
                 components['slider_conv_loop_hole'],
                 conv_loop_pos,
+                components['checkbox_conv_enable_colors'],
                 components['radio_conv_modeling_mode'],
                 components['slider_conv_quantize_colors']
             ],

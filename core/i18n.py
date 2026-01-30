@@ -171,6 +171,14 @@ class I18n:
             'zh': '自动移除图像背景色',
             'en': 'Auto remove background'
         },
+        'conv_enable_colors': {
+            'zh': '3mf着色',
+            'en': '3mf colors'
+        },
+        'conv_enable_colors_info': {
+            'zh': '向3mf文件注入标准3mf颜色',
+            'en': 'Injecting standard 3MF colors into a 3MF file'
+        },
         'conv_tolerance': {
             'zh': '容差',
             'en': 'Tolerance'

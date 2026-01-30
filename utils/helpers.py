@@ -3,22 +3,32 @@ Lumina Studio - Helper Functions
 Helper functions module
 """
 
+import shutil
 import zipfile
 import re
-from typing import List
+
+from pathlib import Path
+from typing import List, Optional
+
+from utils.add_3mf_colors import register_namespaces, detect_color_mode, add_colors_to_xml_string
 
 
-def safe_fix_3mf_names(filepath: str, slot_names: List[str], create_assembly: bool = True):
+def safe_fix_3mf_names(filepath: str, slot_names: List[str], create_assembly: bool = True,
+                       enable_colors: bool = True, color_mode: Optional[str] = None):
     """
     Fix object names in 3MF file and optionally create an assembly.
-    Maps objects to slot_names in the order they appear in the file.
+    Maps objects to slot_names in order they appear in file.
 
     Args:
         filepath: 3MF file path
         slot_names: Object name list
         create_assembly: Whether to create assembly
+        enable_colors: Whether to enable 3MF colors (default: True)
+        color_mode: Color mode ("rybw" or "cmyw", auto-detect if None)
     """
     try:
+
+
         # Read original 3MF
         with zipfile.ZipFile(filepath, 'r') as zf_in:
             files_data = {}
@@ -97,9 +107,35 @@ def safe_fix_3mf_names(filepath: str, slot_names: List[str], create_assembly: bo
                     content = content[:build_match.start()] + new_build + content[build_match.end():]
                     print(f"[DEBUG] Updated build section to reference assembly")
 
-            files_data[model_file] = content.encode('utf-8')
+            # [NEW] If colors are enabled, add color information directly to XML string
+            if enable_colors:
+                try:
+                    print(f"[COLORS] Registered 3MF namespaces")
 
-        # Write back
+                    # Determine color mode if not provided
+                    if color_mode is None:
+                        # Auto-detect from slot_names
+                        detected_mode = detect_color_mode(slot_names)
+                        actual_color_mode = detected_mode
+                        print(f"[COLORS] Auto-detected color mode: {actual_color_mode}")
+                    else:
+                        actual_color_mode = color_mode
+                        print(f"[COLORS] Using specified color mode: {actual_color_mode}")
+
+                    # Add colors directly to XML string in memory (no file I/O)
+                    # This is much faster than re-reading the entire 3MF file
+                    modified_content = add_colors_to_xml_string(content, actual_color_mode)
+
+                    # Update files_data with modified XML (this will be written to file next)
+                    files_data[model_file] = modified_content.encode('utf-8')
+                    print(f"[COLORS] Successfully added colors to XML in memory")
+                except Exception as e:
+                    print(f"[COLORS] Warning: Failed to add colors: {e}")
+            else:
+                # If no colors, encode original content
+                files_data[model_file] = content.encode('utf-8')
+
+        # Write back to file
         with zipfile.ZipFile(filepath, 'w', zipfile.ZIP_DEFLATED) as zf_out:
             for name, data in files_data.items():
                 zf_out.writestr(name, data)
